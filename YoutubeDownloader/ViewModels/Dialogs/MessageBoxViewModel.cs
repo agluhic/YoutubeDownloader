@@ -1,27 +1,29 @@
-﻿using YoutubeDownloader.ViewModels.Framework;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using YoutubeDownloader.Framework;
 
-namespace YoutubeDownloader.ViewModels.Dialogs
+namespace YoutubeDownloader.ViewModels.Dialogs;
+
+public partial class MessageBoxViewModel : DialogViewModelBase
 {
-    public class MessageBoxViewModel : DialogScreen
-    {
-        public string? Title { get; set; }
+    [ObservableProperty]
+    private string? _title = "Title";
 
-        public string? Message { get; set; }
-    }
+    [ObservableProperty]
+    private string? _message = "Message";
 
-    public static class MessageBoxViewModelExtensions
-    {
-        public static MessageBoxViewModel CreateMessageBoxViewModel(
-            this IViewModelFactory factory,
-            string title,
-            string message)
-        {
-            var viewModel = factory.CreateMessageBoxViewModel();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDefaultButtonVisible))]
+    [NotifyPropertyChangedFor(nameof(ButtonsCount))]
+    private string? _defaultButtonText = "OK";
 
-            viewModel.Title = title;
-            viewModel.Message = message;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsCancelButtonVisible))]
+    [NotifyPropertyChangedFor(nameof(ButtonsCount))]
+    private string? _cancelButtonText = "Cancel";
 
-            return viewModel;
-        }
-    }
+    public bool IsDefaultButtonVisible => !string.IsNullOrWhiteSpace(DefaultButtonText);
+
+    public bool IsCancelButtonVisible => !string.IsNullOrWhiteSpace(CancelButtonText);
+
+    public int ButtonsCount => (IsDefaultButtonVisible ? 1 : 0) + (IsCancelButtonVisible ? 1 : 0);
 }
